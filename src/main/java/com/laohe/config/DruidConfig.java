@@ -23,7 +23,7 @@ public class DruidConfig {
 
         //对监控配置
         //白名单
-        registrationBean.addInitParameter("allow","0.0.0.0");
+        registrationBean.addInitParameter("allow","*");
         //黑名单
         registrationBean.addInitParameter("deny","");
         //用户名

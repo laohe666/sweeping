@@ -3,6 +3,7 @@ package com.laohe.process;
 import com.laohe.common.entity.CommonStr;
 import com.laohe.common.util.HttpClientUtils;
 import com.laohe.common.util.JsoupUtils;
+import com.laohe.dao.HistorySegmentDao;
 import com.laohe.entity.HistoryIp;
 import com.laohe.service.impl.HistoryIpServiceImpl;
 import lombok.SneakyThrows;
@@ -34,12 +35,15 @@ public class IPSegmentProcess implements PageProcessor {
 
     private static HistoryIpServiceImpl historyIpService ;
 
+
+    private static HistorySegmentDao segmentDao;
+
     private static RedisTemplate<String, Object> redisTemplate;
 
     Site site = new Site().setTimeOut(CommonStr.OUT_TIME)
             .setCharset(CommonStr.UTF_8)
             .setUserAgent(CommonStr.USER_AGENT)
-            .setSleepTime(20000).setTimeOut(5000);
+            .setSleepTime(2000).setTimeOut(5000).setRetryTimes(3);
 
     @SneakyThrows
     @Override
@@ -90,7 +94,16 @@ public class IPSegmentProcess implements PageProcessor {
         IPSegmentProcess.redisTemplate = redisTemplate;
     }
 
+    @Autowired
+    public void setSegmentDao(HistorySegmentDao historySegmentDao) {
+        IPSegmentProcess.segmentDao = segmentDao;
+    }
+
     public  void scanIP(List<String> ipUrls) throws IOException {
+        if (ipUrls.size() == 0 || ipUrls == null) {
+            System.out.println();
+            return;
+        }
         String[] urls = new String[ipUrls.size()];
         for (int i = 0; i < ipUrls.size(); i++) {
             urls[i] = ipUrls.get(i);

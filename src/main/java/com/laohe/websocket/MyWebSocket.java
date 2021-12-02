@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.text.SimpleDateFormat;
@@ -28,8 +29,8 @@ public class MyWebSocket {
      */
     private static Map<String, Session> clients = new ConcurrentHashMap<>();
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+
+    private static RedisTemplate<String, Object> redisTemplate;
     /**
      * 连接成功时
      */
@@ -82,5 +83,10 @@ public class MyWebSocket {
         webInfo.setCreateTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
         System.out.println(accept);
         sendMessage(JSON.toJSONString(webInfo));
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+        MyWebSocket.redisTemplate = redisTemplate;
     }
 }

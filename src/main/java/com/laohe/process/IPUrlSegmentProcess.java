@@ -84,6 +84,11 @@ public class IPUrlSegmentProcess implements PageProcessor {
         for (int i = 0; i<urls.size() ; i++) {
             us[i] = urls.get(i);
         }
-        Spider.create(new WebInfoProcess()).addUrl(us).thread(5).run();
+        if (urls.size()>50) {
+            Spider.create(new WebInfoProcess()).addUrl(us).thread(20).run();
+        } else {
+            Spider.create(new WebInfoProcess()).addUrl(us).thread(10).run();
+        }
+
     }
 }
